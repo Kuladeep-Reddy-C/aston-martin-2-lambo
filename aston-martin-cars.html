@@ -22,6 +22,7 @@
         <source src="videos/aston-martin/vid-1.mp4" type="video/mp4">
         Your browser does not support HTML5 video.
     </video>
+    <div href="" target="_blank" class="watch-vid icon-container"><img class="watch-vid-img" src="svg-icons/video-play-icon-8.gif"><span class="hover-text">Watch Video</span></div>
 
     <!-- intro -->
     <div class="intro">
@@ -73,25 +74,25 @@
     <div class="spec">
         <div>
             <div class="spec-head">POWER PS</div>
-            <div class="spec-matter">707</div>
+            <div class="spec-matter" data-target="707">0</div>
             <div class="spec-line"></div>
         </div>
         
         <div>
             <div class="spec-head">TOP SPEED MPH</div>
-            <div class="spec-matter">193</div>
+            <div class="spec-matter" data-target="193">0</div>
             <div class="spec-line"></div>
         </div>
 
         <div>
             <div class="spec-head">0-62 MPH S</div>
-            <div class="spec-matter">3.3</div>
+            <div class="spec-matter" data-target="3.3">0</div>
             <div class="spec-line"></div>
         </div>
 
         <div>
             <div class="spec-head">TORQUE NM</div>
-            <div class="spec-matter">900</div>
+            <div class="spec-matter" data-target="900">0</div>
         </div>
     </div>
     <button  onclick="f1()" class="spec-button">See All The Speciifications</button>
@@ -392,16 +393,45 @@
     <div id="buy" class="buy">
         <div class="chose-title">You chose a DBX 707</div>
         <div class="chose-matter-1"></div>
+        <img class="fall-img1" src="logo-no-bg/logo_elite_nobg1.png">
         <div class="chose-matter-2"></div>
+        <img class="fall-img2" src="logo-no-bg/logo_elite_nobg1.png">
         <div>Click on <span class="chose-link">HERE</span> to see the prices</div>
-        <div call="fall">
-            <img class="fall-img1" src="logo-no-bg/logo_elite_nobg1.png">
-            <img class="fall-img2" src="logo-no-bg/logo_elite_nobg1.png">
-        </div>
     </div>
     
     <script>
-                function order()
+        document.addEventListener("DOMContentLoaded", function() {
+            const counters = document.querySelectorAll('.spec-matter');
+            const speed = 200; // The lower the speed, the faster the count
+
+            counters.forEach((counter, index) => {
+                const animate = () => {
+                    const value = +counter.getAttribute('data-target');
+                    const data = +counter.innerText;
+
+                    const time = value / speed;
+                    if(data < value) {
+                        counter.innerText = Math.ceil(data + time);
+                        setTimeout(animate, 1);
+                    } else {
+                        counter.innerText = value;
+                    }
+                };
+
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if(entry.isIntersecting) {
+                            setTimeout(animate, 400 * index); // Delay animation based on index
+                            observer.unobserve(counter);
+                        }
+                    });
+                }, {threshold: 0.5});
+                
+                observer.observe(counter);
+            });
+        });
+
+        function order()
         {
             document.querySelector('.buy').style.display = "flex";
             let value1 = document.querySelector('.seat-title').innerHTML;
